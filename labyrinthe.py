@@ -10,7 +10,7 @@ Gestion des touches de saisie pour déplacement
 Gestion du périmetre de déplacement
 Gestion du redemarrage ou sortie du jeu
 Integration des emplacements murs dans liste_mur[]
-
+J'update directement sur GitHub
 
 """
 
@@ -113,36 +113,48 @@ while big_mac != S:
 	if action == "e":
 		# verifie que big_mac ne sort pas du jeu
 		if (big_mac - 15) >= 0:
-			big_mac = big_mac - 15
-			print("vous allez en haut!")
-			print (big_mac)
+			if (big_mac - 15) in liste_mur:
+				print ("c'est un mur!!!")
+			else:
+				big_mac = big_mac - 15
+				print("vous allez en haut!")
+				print (big_mac)
 		# si hors labyrinthe, big_mac n'est mis à jour.
 		else:
 			print("Cette direction est hors périmetre!")
 	elif action == "x":
 		# verifie que big_mac ne sort pas du jeu
 		if (big_mac + 15) <= 225:
-			big_mac = big_mac + 15
-			print("vous allez en bas!")
-			print (big_mac)
+			if (big_mac + 15) in liste_mur:
+				print ("c'est un mur!!!")
+			else:
+				big_mac = big_mac + 15
+				print("vous allez en bas!")
+				print (big_mac)
 		# si hors labyrinthe, big_mac n'est mis à jour.
 		else:
 			print("Cette direction est hors périmetre!")
 	elif action == "d":
 		# verifie que big_mac ne sort pas du jeu
 		if (big_mac + 1) <= 225:
-			big_mac = big_mac + 1
-			print ("vous allez à droite!")
-			print (big_mac)
+			if (big_mac + 1) in liste_mur:
+				print ("c'est un mur!!!")
+			else:
+				big_mac = big_mac + 1
+				print ("vous allez à droite!")
+				print (big_mac)
 		# si hors labyrinthe, big_mac n'est mis à jour.
 		else:
 			print("Cette direction est hors périmetre!")	
 	elif action == "s":
 		# verifie que big_mac ne sort pas du jeu
 		if (big_mac - 1) >= 0:
-			big_mac = big_mac - 1
-			print ("vous allez à gauche!")
-			print (big_mac)
+			if (big_mac - 1) in liste_mur:
+				print ("c'est un mur!!!")
+			else:
+				big_mac = big_mac - 1
+				print ("vous allez à gauche!")
+				print (big_mac)
 		# si hors labyrinthe, big_mac n'est mis à jour.
 		else:
 			print("Cette direction est hors périmetre!")
