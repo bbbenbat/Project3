@@ -29,7 +29,7 @@ if __name__=='__main__':
         # découpage des lignes dans la variable lecture
         lecture = fichier.read().splitlines()
         # création d'un tableau, via la  liste_lettre dans la liste_ligne
-        def creation_labyrinthe():
+        def creation_laby():
             liste_all = []
             liste_lettre = []
             for ligne in lecture:
@@ -40,7 +40,7 @@ if __name__=='__main__':
                 liste_all += [liste_lettre]
             print(liste_all)
 
-        creation_labyrinthe()
+        creation_laby()
 
 
 
