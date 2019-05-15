@@ -16,13 +16,23 @@ J'update directement sur GitHub
 With pour la gestion du fichier
 if __name__='__main__' pour l'appel des fonctions sans execution du script
 """
+# définition de la position de départ
+global x, y
 
+x = 0
+y = 0
+
+### création de la fontion permettant de selectionner une position
+# selon les axes y et x
+
+def position(x,y):
+    position = liste_all[y]
+    print(position[x])
+    position[x]
 
 
 # importation du fichier labyrinth.py dans la variable fichier
 if __name__=='__main__':
-
-    x = 0
 
     with open("labyrinth.txt","r") as fichier:
 
@@ -39,15 +49,24 @@ if __name__=='__main__':
             # intégration de chaque liste dans la liste liste_all
             liste_all += [liste_lettre]
 
-        # création de la fontion permettant de selectionner une position
-        # selon les axes y et x
-        def position(x,y):
-            position = liste_all[y]
-            print(position[x])
-            position[x]
 
-        # test affichage postion
-        position(4,14)
+
+        ### création de la fonction permettant d'enregistrer la position saisie
+        ## si selection touche bas
+        # l'axe des y prend +1
+        y += 1
+        position(x,y)
+        ## si selection touche haut
+        # l'axe des y prend -1
+        y -= 1
+        ## si selection touche gauche
+        # l'axe des x prend -1
+        x -= 1
+        ## si selection touche droite
+        # l'axe des x prend +1
+        x += 1
+
+
 
 
 
