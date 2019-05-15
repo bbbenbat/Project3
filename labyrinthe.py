@@ -29,25 +29,17 @@ if __name__=='__main__':
         # découpage des lignes dans la variable lecture
         lecture = fichier.read().splitlines()
         # création d'un tableau, via la  liste_lettre dans la liste_ligne
-        def creation_labyrinthe():
-            liste_all = []
-            liste_lettre = []
-            for ligne in lecture:
-            # découpe des caracteres de chaque ligne
-            # intégration de ces caractères dans la liste liste_lettre
-                liste_lettre = [i for i in ligne]
-                # intégration de chaque liste dans la liste liste_all
-                liste_all += [liste_lettre]
-            print(liste_all)
 
-        creation_labyrinthe()
+        liste_all = []
+        liste_lettre = []
+        for ligne in lecture:
+        # découpe des caracteres de chaque ligne
+        # intégration de ces caractères dans la liste liste_lettre
+            liste_lettre = [i for i in ligne]
+            # intégration de chaque liste dans la liste liste_all
+            liste_all += [liste_lettre]
 
 
-
-
-
-        #print(liste_ligne[1])
-            #for lettre in liste_ligne
 
 
 
