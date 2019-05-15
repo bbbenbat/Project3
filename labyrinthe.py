@@ -39,6 +39,18 @@ if __name__=='__main__':
             # intégration de chaque liste dans la liste liste_all
             liste_all += [liste_lettre]
 
+        # création de la fontion permettant de selectionner une position
+        # selon les axes y et x
+        def position(x,y):
+            position = liste_all[y]
+            print(position[x])
+            position[x]
+
+        # test affichage postion
+        position(4,14)
+
+
+
 
 
 
