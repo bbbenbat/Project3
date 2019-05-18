@@ -1,70 +1,137 @@
-"""
-29/04/19
-Intégration du fichier
-traitement des caracteres dans des listes
-localisation des endroits importants (entree, sortie, 3 objets)
 
-30/04/19
-Gestion des déplacement de Mac Gyver (varible big_mac)
-Gestion des touches de saisie pour déplacement
-Gestion du périmetre de déplacement
-Gestion du redemarrage ou sortie du jeu
-Integration des emplacements murs dans liste_mur[]
-J'update directement sur GitHub
-
-14/05/19
-With pour la gestion du fichier
-if __name__='__main__' pour l'appel des fonctions sans execution du script
-"""
+#### VARIABLES ####
 # définition de la position de départ
-global x, y
-
 x = 0
 y = 0
+X = 0
+Y = 0
 
+# Position de départ du joueur
+mac_gyver = { 'X' : 0, 'Y' : 0}
+big_mac = 0
+
+liste_letter = []
+liste_all = []
+
+
+# chemin fichier labyrinthe
+fichier_laby = "labyrinth.txt"
+
+haut = 'e'
+bas = 'x'
+gauche = 's'
+droite = 'd'
+
+
+start = 'D'
+out = 'S'
+mur = 'M'
+
+#### FONCTIONS ####
 ### création de la fontion permettant de selectionner une position
 # selon les axes y et x
+def position(a,b):
+    position = liste_all[b][a]
+    #print(position)
+    return position
 
-def position(x,y):
-    position = liste_all[y]
-    print(position[x])
-    position[x]
+### création de la fonction permettant de modifier les variables x et y
+def mouvement(touch):
+    ## si selection touche bas
+    # l'axe des y prend +1
+    global x, y
+    x = X
+    y = Y
+    if touch == bas:
+        y += 1
+    # print(position(x,y))
+    ## si selection touche haut
+    # l'axe des y prend -1
+    if touch == haut:
+        y -= 1
+    ## si selection touche gauche
+    # l'axe des x prend -1
+    if touch == gauche:
+        x -= 1
+    ## si selection touche droite
+    # l'axe des x prend +1
+    if touch == droite:
+        x += 1
+    #print(position)
+    #print(x, y)
 
+def annonce():
+    print("*** Hello, bienvenue dans le nouveau, super, fabuleux jeux de Mac Gyver!!! ***")
+    print("Tu dois aider Mac Gyver (Big Mac pour les intimes) à sortir!")
+    print("Tu devras recupérer tous les objets pour créer une")
+    print("seringue et endormir le gardien à la sortie ;) .")
+    print("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
+    print("Pour quitter, appuyer sur la touche q")
 
 # importation du fichier labyrinth.py dans la variable fichier
 if __name__=='__main__':
+    # on initie une variable qui permettra de verifier si c'est une premiere partie
+    premiere_partie = 0
 
-    with open("labyrinth.txt","r") as fichier:
 
+    # si relance de la partie affichage de l'annonce
+    with open(fichier_laby,"r") as fichier:
         # découpage des lignes dans la variable lecture
         lecture = fichier.read().splitlines()
-        # création d'un tableau, via la  liste_lettre dans la liste_ligne
+        # création d'un tableau, via la  liste_lettre dans la liste_all
 
-        liste_all = []
-        liste_lettre = []
         for ligne in lecture:
         # découpe des caracteres de chaque ligne
         # intégration de ces caractères dans la liste liste_lettre
-            liste_lettre = [i for i in ligne]
+            liste_letter = [i for i in ligne]
             # intégration de chaque liste dans la liste liste_all
-            liste_all += [liste_lettre]
+            liste_all += [liste_letter]
+
+            # annonce
+        annonce()
+        # on initialise le statut de départ
+        big_mac = liste_all[0][0]
+        print(position(x,y))
+        #print(big_mac)
+        while big_mac != out:
+            # on demande à l'utilisateur quel direction il choisit
+            action = input("Quel direction?\n")
+            # si action egale à une des directions
+            if (action == haut or action == bas or action == gauche or action == droite):
+                # on verifie que la future position n'est pas un mur
+                mouvement(action)
+                if position(x,y) == mur:
+                    print("C'est un mur!!! "+big_mac)
+                else:
+                    # on MAJ les coordonnées de la variable big_mac
+                    X = x
+                    Y = y
+                    big_mac = position(x, y)
+                    print(big_mac)
+
+
+                #def verification(c):
+                 #   mouvement(c)
+                  #  if position(x,y) == mur:
+                   #     return mur
+
+                    #print("TEST "+big_mac)
+                #pri = position(action)
+                #print(pri)
+
+                # position_future = mouvement(action)
+                # print(position_future)
+            else:
+                print("Erreur de saisie!!!")
+                print(action)
 
 
 
-        ### création de la fonction permettant d'enregistrer la position saisie
-        ## si selection touche bas
-        # l'axe des y prend +1
-        y += 1
-        position(x,y)
-        ## si selection touche haut
-        # l'axe des y prend -1
-        y -= 1
-        ## si selection touche gauche
-        # l'axe des x prend -1
-        x -= 1
-        ## si selection touche droite
-        # l'axe des x prend +1
-        x += 1
+
+
+
+
+                #action = 'a'
 
 
 
@@ -78,11 +145,9 @@ if __name__=='__main__':
 
 
 
-        """
 
-        liste_ligne = []
-        liste_lettre = []
-        liste_mur = []
+
+"""
 
 
         # On crée une fonction pour définir l'environnement autour de big_mac
@@ -117,17 +182,7 @@ if __name__=='__main__':
         ## dessus de la position
         ##print (liste_lettre[20-15])
 
-        # Recherche des positions importantes
-        # entrée = D
-        D = (liste_lettre.index('D'))
-        # sortie = S
-        S = (liste_lettre.index('S'))
-        # aiguille = O
-        O = (liste_lettre.index('O'))
-        # tube = P
-        P = (liste_lettre.index('P'))
-        # ether = Q
-        Q = (liste_lettre.index('Q'))
+        
 
         # Mac Gyver (big_mac) doit commencer sur la position D
         global big_mac
@@ -148,31 +203,7 @@ if __name__=='__main__':
         # on integre une valeur sur chaque variables selon la position de Mac Gyver,
         # alias big_mac
         localisation(int(big_mac))
-        # on initie une variable qui permettra de verifier si c'est une premiere partie
-        premiere_partie = 0
-        # annonce du jeu
-        print("*** Hello, bienvenue dans le nouveau, super, fabuleux jeux de Mac Gyver!!! ***")
-        print("Tu dois aider Mac Gyver (Big Mac pour les intimes) à sortir!")
-        print("Tu devras recupérer tous les objets pour créer une")
-        print ("seringue et endormir le gardien à la sortie ;) .")
-        print ("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
-        print ("Pour quitter, appuyer sur la touche q")
-
-        while big_mac != S:
-            # si relance de la partie affichage de l'annonce
-            if premiere_partie == 1:
-                print("*** Hello, bienvenue dans le nouveau, super, fabuleux jeux de Mac Gyver!!! ***")
-                print("Tu dois aider Mac Gyver (Big Mac pour les intimes) à sortir!")
-                print("Tu devras recupérer tous les objets pour créer une")
-                print ("seringue et endormir le gardien à la sortie ;) .")
-                print ("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
-                print ("Pour quitter, appuyer sur la touche q")
-            # on demande à l'utilisateur quel direction il choisit
-            action = input("Quel direction?\n")
-            ##print(action)
-            # si action egale à une des quatres lettres
-            # on maj la valeur de big_mac
-
+        
             if action == "e":
                 # verifie que big_mac ne sort pas du jeu
                 if (big_mac - 15) >= 0:
