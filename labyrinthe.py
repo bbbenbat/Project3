@@ -32,7 +32,6 @@ mur = 'M'
 # selon les axes y et x
 def position(a,b):
     position = liste_all[b][a]
-    #print(position)
     return position
 
 ### fonction permettant de modifier les variables x et y
