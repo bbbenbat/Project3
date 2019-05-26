@@ -8,6 +8,8 @@ Y = 0
 
 # variable joueur
 big_mac = 0
+# compteur objets
+comp_objets = 3
 
 liste_letter = []
 liste_all = []
@@ -21,6 +23,11 @@ haut = 'e'
 bas = 'x'
 gauche = 's'
 droite = 'd'
+
+# variables objets
+ether = 'O'
+aiguille = 'P'
+tube = 'Q'
 
 # concordance variables - lettres fichier texte
 start = 'D'
@@ -68,6 +75,21 @@ def annonce():
     print("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
     print("Pour quitter, appuyer sur la touche q")
 
+### fonction de controle de saisie des objets
+def saisie_objet(e):
+    global comp_objets
+    # lorsque le joueur arrive sur une case
+    # si cette case est egale à un des 3 objets
+    if (e == ether or e == aiguille or e == tube):
+        print("C'est un objet")
+        # la variable de controle est décrémentée de 1
+        comp_objets -= 1
+        print(comp_objets)
+        return(comp_objets)
+        # la lettre de cette case est changée en lettre chemin
+        # des que la variable comp_objets arrive à 0, tous les objets sont saisis
+
+
 # importation du fichier labyrinth.py dans la variable fichier
 if __name__=='__main__':
     # on initie une variable qui permettra de verifier si c'est une premiere partie
@@ -89,7 +111,8 @@ if __name__=='__main__':
 
         # annonce
         annonce()
-        while big_mac != out:
+        # boucle pour fin de partie
+        while big_mac != out and comp_objets != 0:
             # on demande à l'utilisateur quel direction il choisit
             action = input("Quel direction?\n")
             # si action egale à une des directions
@@ -97,13 +120,18 @@ if __name__=='__main__':
                 # on verifie que la future position n'est pas un mur
                 mouvement(action)
                 if position(x,y) == mur:
-                    print("C'est un mur!!! " + big_mac + " "+ str(x) + " " + str(y) )
+                    print("C'est un mur!!! ")# + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
+
                 else:
                     # on MAJ les coordonnées de la variable big_mac
                     X = x
                     Y = y
                     big_mac = position(x, y)
-                    print(big_mac + str(x) + " " + str(y))
+                    # fonction pour le controle des objets
+                    saisie_objet(big_mac)
+                    print("*" + action + "*" + str(x) + " " + str(y) + " "+big_mac)
+                if big_mac == out:
+                    print("Bravo Mac Gyver, tu es libre!!!")
             else:
                 print("Erreur de saisie!!!")
                 print(action)
