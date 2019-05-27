@@ -74,6 +74,7 @@ def annonce():
     print("seringue et endormir le gardien à la sortie ;) .")
     print("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
     print("Pour quitter, appuyer sur la touche q")
+    #print(liste_all)
 
 ### fonction de controle de saisie des objets
 def saisie_objet(e):
@@ -86,8 +87,8 @@ def saisie_objet(e):
         comp_objets -= 1
         print(comp_objets)
         return(comp_objets)
-        # la lettre de cette case est changée en lettre chemin
-        # des que la variable comp_objets arrive à 0, tous les objets sont saisis
+
+
 
 
 # importation du fichier labyrinth.py dans la variable fichier
@@ -112,6 +113,7 @@ if __name__=='__main__':
         # annonce
         annonce()
         # boucle pour fin de partie
+        #  des que la variable comp_objets arrive à 0, tous les objets sont saisis
         while big_mac != out and comp_objets != 0:
             # on demande à l'utilisateur quel direction il choisit
             action = input("Quel direction?\n")
@@ -129,6 +131,8 @@ if __name__=='__main__':
                     big_mac = position(x, y)
                     # fonction pour le controle des objets
                     saisie_objet(big_mac)
+                    # modification de la lettre actuelle en C (car vérification mur et objets)
+                    liste_all[Y][X] = 'C'
                     print("*" + action + "*" + str(x) + " " + str(y) + " "+big_mac)
                 if big_mac == out:
                     print("Bravo Mac Gyver, tu es libre!!!")
