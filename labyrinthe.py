@@ -114,7 +114,7 @@ if __name__=='__main__':
         annonce()
         # boucle pour fin de partie
         #  des que la variable comp_objets arrive à 0, tous les objets sont saisis
-        while big_mac != out and comp_objets != 0:
+        while big_mac != out:
             # on demande à l'utilisateur quel direction il choisit
             action = input("Quel direction?\n")
             # si action egale à une des directions
@@ -134,8 +134,10 @@ if __name__=='__main__':
                     # modification de la lettre actuelle en C (car vérification mur et objets)
                     liste_all[Y][X] = 'C'
                     print("*" + action + "*" + str(x) + " " + str(y) + " "+big_mac)
-                if big_mac == out:
-                    print("Bravo Mac Gyver, tu es libre!!!")
+                if big_mac == out and comp_objets != 0 :
+                    print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
+                elif big_mac == out and comp_objets == 0:
+                    print("Bravo, Mac Gyver es libre!!!")
             else:
                 print("Erreur de saisie!!!")
                 print(action)
