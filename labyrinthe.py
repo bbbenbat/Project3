@@ -123,7 +123,6 @@ if __name__=='__main__':
                 mouvement(action)
                 if position(x,y) == mur:
                     print("C'est un mur!!! ")# + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
-
                 else:
                     # on MAJ les coordonnées de la variable big_mac
                     X = x
@@ -134,6 +133,7 @@ if __name__=='__main__':
                     # modification de la lettre actuelle en C (car vérification mur et objets)
                     liste_all[Y][X] = 'C'
                     print("*" + action + "*" + str(x) + " " + str(y) + " "+big_mac)
+                # verification sortie avec objets
                 if big_mac == out and comp_objets != 0 :
                     print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
                 elif big_mac == out and comp_objets == 0:
