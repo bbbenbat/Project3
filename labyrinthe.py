@@ -1,3 +1,10 @@
+"""
+Création d'un jeu de labyrinthe.
+Mac Gyver doit sortir du labyrinthe avec les 3 objets.
+S'il sort sans les 3 objets, il meurt!
+Le joueur pet se déplacer à la verticale et horizontale.
+Le labyrinthe est un carré de 15 sprints.
+"""
 
 #### VARIABLES ####
 # définition de la position de départ
@@ -33,6 +40,11 @@ tube = 'Q'
 start = 'D'
 out = 'S'
 mur = 'M'
+
+
+#### CLASSES ####
+### classe permettant de placer les 3 objets
+
 
 #### FONCTIONS ####
 ### fontion permettant de selectionner une position
@@ -130,7 +142,7 @@ if __name__=='__main__':
                     big_mac = position(x, y)
                     # fonction pour le controle des objets
                     saisie_objet(big_mac)
-                    # modification de la lettre actuelle en C (car vérification mur et objets)
+                    # modification de la lettre actuelle en C (apres verif mur et objets)
                     liste_all[Y][X] = 'C'
                     print("*" + action + "*" + str(x) + " " + str(y) + " "+big_mac)
                 # verification sortie avec objets
