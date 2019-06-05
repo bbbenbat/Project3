@@ -4,6 +4,15 @@ Mac Gyver doit sortir du labyrinthe avec les 3 objets.
 S'il sort sans les 3 objets, il meurt!
 Le joueur pet se déplacer à la verticale et horizontale.
 Le labyrinthe est un carré de 15 sprints.
+
+Rules about labyrinthe.txt file
+D for the start position
+S for the ending
+M for the wall
+C for the way
+E for wrong
+S pour la sortie
+M pour le
 """
 
 #### VARIABLES ####
@@ -18,16 +27,13 @@ big_mac = 0
 # compteur objets
 comp_objets = 3
 
-liste_letter = []
-liste_all = []
-
 
 # chemin fichier labyrinthe
 fichier_laby = "labyrinth.txt"
 
 # variables directions
-haut = 'e'
-bas = 'x'
+HAUT = 'e'
+BAS = 'x'
 gauche = 's'
 droite = 'd'
 
@@ -43,29 +49,57 @@ mur = 'M'
 
 
 #### CLASSES ####
-### classe permettant de placer les 3 objets
+### classe permettant de représenter le labyrinthe
+class Labyrinthe():
+    def __init__(self, fichier_laby):
+        self.x = 0
+        self.y = 0
+        self.liste_all = self.lec_fichier(fichier_laby)
+
+
+    def lec_fichier(self, a):
+        ''' fonction lecture du fichier '''
+        liste_all = []
+        # si relance de la partie affichage de l'annonce
+        with open(a, "r") as fichier:
+            # découpage des lignes dans la variable lecture
+            lecture = fichier.read().splitlines()
+            # création d'un tableau, via la  liste_letter dans la liste_all
+
+            for ligne in lecture:
+                # découpe les caracteres de chaque ligne
+                # intégration de ces caractères dans la liste liste_letter
+                liste_letter = [i for i in ligne]
+                # intégration de chaque liste dans la liste liste_all
+                liste_all += [liste_letter]
+            return (liste_all)
+
+    def position(self, a, b):
+        '''fontion permettant de selectionner une position selon les axes y et x '''
+        position = self.liste_all[b][a]
+        return position
+
+    def __str__(self):
+        for line in self.liste_all:
+            print(line)
 
 
 #### FONCTIONS ####
-### fontion permettant de selectionner une position
-# selon les axes y et x
-def position(a,b):
-    position = liste_all[b][a]
-    return position
+
+
+
+
 
 ### fonction permettant de modifier les variables x et y
-def mouvement(touch):
-    global x, y
-    x = X
-    y = Y
+def mouvement(touch, x, y):
     ## si selection touche bas
     # l'axe des y prend +1
-    if touch == bas:
+    if touch == BAS:
         if 0 <= y <= 13:
             y += 1
     ## si selection touche haut
     # l'axe des y prend -1
-    if touch == haut:
+    if touch == HAUT:
         if 1 <= y <= 14:
             y -= 1
     ## si selection touche gauche
@@ -78,6 +112,7 @@ def mouvement(touch):
     if touch == droite:
         if 0 <= x <= 13:
             x += 1
+    return(x, y)
 #### fonction pour l'annonce
 def annonce():
     print("*** Hello, bienvenue dans le nouveau, super, fabuleux jeux de Mac Gyver!!! ***")
@@ -100,57 +135,41 @@ def saisie_objet(e):
         print(comp_objets)
         return(comp_objets)
 
-
-
-
-# importation du fichier labyrinth.py dans la variable fichier
 if __name__=='__main__':
+ # importation du fichier labyrinth.py dans la variable fichier
     # on initie une variable qui permettra de verifier si c'est une premiere partie
     premiere_partie = 0
 
+    #liste_all =   (fichier_laby)
+    a = Labyrinthe(fichier_laby)
 
-    # si relance de la partie affichage de l'annonce
-    with open(fichier_laby,"r") as fichier:
-        # découpage des lignes dans la variable lecture
-        lecture = fichier.read().splitlines()
-        # création d'un tableau, via la  liste_letter dans la liste_all
+    annonce()
 
-        for ligne in lecture:
-        # découpe des caracteres de chaque ligne
-        # intégration de ces caractères dans la liste liste_letter
-            liste_letter = [i for i in ligne]
-            # intégration de chaque liste dans la liste liste_all
-            liste_all += [liste_letter]
-
-        # annonce
-        annonce()
-        # boucle pour fin de partie
-        #  des que la variable comp_objets arrive à 0, tous les objets sont saisis
-        while big_mac != out:
-            # on demande à l'utilisateur quel direction il choisit
-            action = input("Quel direction?\n")
-            # si action egale à une des directions
-            if (action == haut or action == bas or action == gauche or action == droite):
-                # on verifie que la future position n'est pas un mur
-                mouvement(action)
-                if position(x,y) == mur:
-                    print("C'est un mur!!! ")# + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
-                else:
-                    # on MAJ les coordonnées de la variable big_mac
-                    X = x
-                    Y = y
-                    big_mac = position(x, y)
-                    # fonction pour le controle des objets
-                    saisie_objet(big_mac)
-                    # modification de la lettre actuelle en C (apres verif mur et objets)
-                    liste_all[Y][X] = 'C'
-                    print("*" + action + "*" + str(x) + " " + str(y) + " "+big_mac)
-                # verification sortie avec objets
-                if big_mac == out and comp_objets != 0 :
-                    print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
-                elif big_mac == out and comp_objets == 0:
-                    print("Bravo, Mac Gyver es libre!!!")
+    while big_mac != out:
+        # on demande à l'utilisateur quel direction il choisit
+        action = input("Quel direction?\n")
+        # si action egale à une des directions
+        if (action == HAUT or action == BAS or action == gauche or action == droite):
+            # on verifie que la future position n'est pas un mur
+            x2, y2 = mouvement(action, x, y)
+            if a.position(x2,y2) == mur:
+                print("C'est un mur!!! ")# + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
             else:
-                print("Erreur de saisie!!!")
-                print(action)
+                # on MAJ les coordonnées de la variable big_mac
+                x = x2
+                y = y2
+                big_mac = a.position(x, y)
+                # fonction pour le controle des objets
+                saisie_objet(big_mac)
+                # modification de la lettre actuelle en C (apres verif mur et objets)
+                a.liste_all[y2][x2] = 'C'
+                print("*" + action + "*" + str(x) + " " + str(y) + " "+big_mac)
+            # verification sortie avec objets
+            if big_mac == out and comp_objets != 0 :
+                print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
+            elif big_mac == out and comp_objets == 0:
+                print("Bravo, Mac Gyver es libre!!!")
+        else:
+            print("Erreur de saisie!!!")
+            print(action)
 
