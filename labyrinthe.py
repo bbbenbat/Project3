@@ -84,14 +84,16 @@ class Labyrinthe():
         for line in self.list_all:
             print(line)
 
-    def annonce(self, nom):
-        print("*** Hello " + nom + ", bienvenue dans le nouveau, super, fabuleux jeux de Mac Gyver!!! ***")
-        print("Tu dois aider Mac Gyver (Big Mac pour les intimes) à sortir!")
-        print("Tu devras recupérer tous les objets pour créer une")
-        print("seringue et endormir le gardien à la sortie ;) .")
-        print("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
-        print("Pour quitter, appuyer sur la touche q")
-        # print(liste_all)
+    def pos_object(self, x):
+        while len(x) > 0:
+            # run all index of liste_object
+            axe1 = random.randint(0, 14)
+            axe2 = random.randint(0, 14)
+            # select with random 1 position
+            prev = self.position(axe1, axe2)
+            if prev == 'C':
+                # if C, we change the letter of this position in liste_all by one of 3 letter
+                self.list_all[axe2][axe1] = x.pop()
 
     def mouvement(self, touch, x, y):
         # to change x & y variables
@@ -121,7 +123,15 @@ class Labyrinthe():
 
 
 
-#### fonction pour l'annonce
+
+def annonce(nom):
+    """ Print the announce """
+    print("*** Hello " + nom + ", bienvenue dans le nouveau, super, fabuleux jeux de Mac Gyver!!! ***")
+    print("Tu dois aider Mac Gyver (Big Mac pour les intimes) à sortir!")
+    print("Tu devras recupérer tous les objets pour créer une")
+    print("seringue et endormir le gardien à la sortie ;) .")
+    print("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
+    print("Pour quitter, appuyer sur la touche q")
 
 
 def saisie_objet(e):
@@ -148,17 +158,11 @@ if __name__=='__main__':
 #    print(random.choice(l))
 
     joueur = input("Quel est votre nom de joueur?\n")
-    a.annonce(joueur)
+    annonce(joueur)
 
-    while len(list_object) > 0:
-        # run all index of liste_object
-        axe1 = random.randint(0, 14)
-        axe2 = random.randint(0, 14)
-        # select with random 1 position
-        prev = a.position(axe1, axe2)
-        if prev == 'C':
-            # if C, we change the letter of this position in liste_all by one of 3 letter
-            a.list_all[axe2][axe1] = list_object.pop()
+    a.pos_object(list_object)
+
+    a.__str__()
 
     while big_mac != out:
         # ask to user which direction he wants to go
