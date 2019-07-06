@@ -1,5 +1,5 @@
-"""
-Création d'un jeu de labyrinthe.
+
+'''Création d'un jeu de labyrinthe.
 Mac Gyver doit sortir du labyrinthe avec les 3 objets.
 S'il sort sans les 3 objets, il meurt!
 Le joueur pet se déplacer à la verticale et horizontale.
@@ -11,8 +11,8 @@ S for the ending
 M for the wall
 C for the way
 E for the wrong way
-S for the ending
-"""
+S for the ending''
+'''
 
 
 #Tous les objets du labyrinthe doivent être dans la classe
@@ -43,9 +43,9 @@ LEFT = 's'
 RIGHT = 'd'
 
 # variables objets
-ETHER = 'O'
-NEEDLE = 'P'
-TUBE = 'Q'
+ETHER = 'N'
+NEEDLE = 'O'
+TUBE = 'P'
 
 # concordance variables - lettres fichier texte
 START = 'D'
@@ -60,7 +60,7 @@ class Labyrinthe():
         self.x = 0
         self.y = 0
         self.list_all = self.lec_fichier(fichier_laby)
-        self.remining_objetcts = {ETHER, NEEDLE, TUBE}
+        self.remining_objects = {ETHER, NEEDLE, TUBE}
         self.list_object = ['N', 'O', 'P']
         #self.list_position_mcgyver = self.position_mcgyver(x, y)
 
@@ -126,12 +126,15 @@ class Labyrinthe():
         if (e == ETHER or e == NEEDLE or e == TUBE):
             """ player comes to a case, if the case = 1 of 3 objects """
             print("C'est un objet")
-            self.list_object(e)
+            self.remining_objects.remove(e)
+            #self.list_object(e)
+            print(self.remining_objects)
 
     def macgyver_visual(self, y2, x2):
         show_laby = deepcopy(a.list_all)
         show_laby[y2][x2] = "X"
-        print(show_laby)
+        for r in show_laby:
+            print(r)
 
 
 #### FONCTIONS ####
@@ -186,10 +189,10 @@ if __name__=='__main__':
                 a.macgyver_visual(y2, x2)
                 # position actuelle de mcgyver sur la case X
             # verification sortie avec objets
-            if BIG_MAC == OUT and len(a.list_object) != 0 :
+            if BIG_MAC == OUT and len(a.remining_objects) != 0 :
                 print(joueur + " tu n'avais pas tous les objets, RIP Mac Gyver!")
-            elif BIG_MAC == OUT and len(a.list_object) == 0:
-                print("Bravo " + joueur + ", Mac Gyver es libre!!!")
+            elif BIG_MAC == OUT and len(a.remining_objects) == 0:
+                print("Bravo " + joueur + ", Mac Gyver a endormi le gardin, il est libre!!!")
         else:
             print("Erreur de saisie!!!")
             print(action)
