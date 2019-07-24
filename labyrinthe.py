@@ -1,9 +1,6 @@
 
-'''Création d'un jeu de labyrinthe.
-Mac Gyver doit sortir du labyrinthe avec les 3 objets.
-S'il sort sans les 3 objets, il meurt!
-Le joueur pet se déplacer à la verticale et horizontale.
-Le labyrinthe est un carré de 15 sprints.
+''' Creating a labyrinth game.
+MacGyver must go out with 3 objects.
 
 Rules about labyrinthe.txt file
 D for the start position
@@ -21,13 +18,18 @@ S for the ending''
 #verification de saisie de tous les objects avec len de self.remining_object
 #maj position de mcgyver sans x et y, position dans la class
 
+
 import random
-from copy import deepcopy
+import pygame
+from pygame.locals import *
+pygame.init()
+
 
 #### VARIABLES ####
 # x y initialisation
 x = 0
 y = 0
+
 
 
 # player
@@ -63,10 +65,11 @@ class Labyrinthe():
         self.remining_objects = {ETHER, NEEDLE, TUBE}
         self.list_object = ['N', 'O', 'P']
         #self.list_position_mcgyver = self.position_mcgyver(x, y)
+        self.dimension = 15
 
     def lec_fichier(self, a):
         """ To read labyrinthe file """
-        liste_all = []
+        self.liste_all = []
         # si relance de la partie affichage de l'annonce
         with open(a, "r") as fichier:
             # découpage des lignes dans la variable lecture
@@ -78,8 +81,9 @@ class Labyrinthe():
                 # intégration de ces caractères dans la liste liste_letter
                 liste_letter = [i for i in line]
                 # intégration de chaque liste dans la liste liste_all
-                liste_all += [liste_letter]
-            return (liste_all)
+                self.liste_all += [liste_letter]
+            return(self.liste_all)
+
 
     def position(self, a, b):
         """ fontion permettant de selectionner une position selon les axes y et x """
@@ -88,6 +92,7 @@ class Labyrinthe():
 
     def __str__(self):
         for line in self.list_all:
+
             print(line)
 
     def pos_object(self, x):
@@ -103,7 +108,7 @@ class Labyrinthe():
 
     def mouvement(self, touch, x, y):
         # to change x & y variables
-        if touch == DOWN:
+        if event.key == K_DOWN:
             # if down, y takes +1
             if 0 <= y <= 13:
                 y += 1
@@ -126,7 +131,7 @@ class Labyrinthe():
         if (e == ETHER or e == NEEDLE or e == TUBE):
             """ player comes to a case, if the case = 1 of 3 objects """
             print("C'est un objet")
-            self.remining_objects.remove(e)
+            self.remaining_objects.remove(e)
             #self.list_object(e)
             print(self.remining_objects)
 
@@ -148,52 +153,126 @@ def annonce(nom):
     print("Pour quitter, appuyer sur la touche q")
 
 
-
 if __name__=='__main__':
+
+    # pygame variable
+    laby_fenetre = pygame.display.set_mode((900, 900))
+    laby_background = pygame.image.load("background_test.jpg").convert()
+    laby_background = pygame.transform.scale(laby_background, (900, 900))
+    laby_fenetre.blit(laby_background, (0, 0))
+    mur = pygame.image.load("mur.jpeg").convert()
+    mur = pygame.transform.scale(mur, (60, 60))
+
+    img_ether = pygame.image.load("ether.png").convert()
+    img_ether = pygame.transform.scale(img_ether, (60, 60))
+
+    img_aiguille = pygame.image.load("aiguille.png").convert()
+    img_aiguille = pygame.transform.scale(img_aiguille, (60, 60))
+
+    img_tube_plastique = pygame.image.load("tube_plastique.png").convert()
+    img_tube_plastique = pygame.transform.scale(img_tube_plastique, (60, 60))
+
+    mcg = pygame.image.load("MacGyver.png").convert()
+    mcg = pygame.transform.scale(mcg, (60, 60))
+    position_mcg = mcg.get_rect()
+    laby_fenetre.blit(mcg, position_mcg)
+    #laby_fenetre.blit(mur, (0, 0))
+    # laby_fenetre.blit(mur, (60,60))
+    pygame.display.flip()
+
     # control that is a first play
 
     # Creating of 'a' object
     a = Labyrinthe(LABY_FILE)
 
-#def objets_alea():
-    # Recuperer les coordonnées de toutes les lettres C
- #   l = [i for i in a.liste_all]
-#    print(random.choice(l))
 
-    joueur = input("Quel est votre nom de joueur?\n")
-    annonce(joueur)
 
     a.pos_object(a.list_object)
 
-    #a.__str__()
+
+
+    def pyg_laby():
+        laby_fenetre.blit(laby_background, (0, 0))
+        x_lab = 0
+        y_lab = 0
+        while x_lab <= 14:
+            while y_lab <= 14:
+                if a.liste_all[y_lab][x_lab] == 'M':
+                    #print(str(x_lab) + " * " + str(y_lab))
+                    laby_fenetre.blit(mur, (x_lab * 60, y_lab * 60))
+                if a.liste_all[y_lab][x_lab] == ETHER:
+                    #print(str(x_lab) + " * " + str(y_lab))
+                    laby_fenetre.blit(img_ether, (x_lab * 60, y_lab * 60))
+                if a.liste_all[y_lab][x_lab] == NEEDLE:
+                    #print(str(x_lab) + " * " + str(y_lab))
+                    laby_fenetre.blit(img_aiguille, (x_lab * 60, y_lab * 60))
+                if a.liste_all[y_lab][x_lab] == TUBE:
+                    #print(str(x_lab) + " * " + str(y_lab))
+                    laby_fenetre.blit(img_tube_plastique, (x_lab * 60, y_lab * 60))
+                y_lab += 1
+            y_lab = 0
+            x_lab += 1
+        x_lab = 0
+
+        #pygame.display.flip()
+
+    #joueur = input("Quel est votre nom de joueur?\n")
+    #annonce(joueur)
 
     while BIG_MAC != OUT:
-        # ask to user which direction he wants to go
-        action = input("Quel direction?\n")
-        # si action egale à une des directions
-        if (action == TOP or action == DOWN or action == LEFT or action == RIGHT):
-            # check the futur position is not a wall
-            x2, y2 = a.mouvement(action, x, y)
-            if a.position(x2,y2) == WALL:
-                print("C'est un mur!!! ")# + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
-            else:
-                # on MAJ les coordonnées de la variable big_mac
-                x = x2
-                y = y2
-                BIG_MAC = a.position(x, y)
-                # fonction pour le controle des objets
-                a.saisie_objet(BIG_MAC)
-                # modification de la lettre actuelle en C (apres verif mur et objets)
-                a.list_all[y2][x2] = 'C'
-                print("*" + action + "*" + str(x) + " " + str(y) + " " + BIG_MAC)
-                a.macgyver_visual(y2, x2)
-                # position actuelle de mcgyver sur la case X
-            # verification sortie avec objets
-            if BIG_MAC == OUT and len(a.remining_objects) != 0 :
-                print(joueur + " tu n'avais pas tous les objets, RIP Mac Gyver!")
-            elif BIG_MAC == OUT and len(a.remining_objects) == 0:
-                print("Bravo " + joueur + ", Mac Gyver a endormi le gardin, il est libre!!!")
-        else:
-            print("Erreur de saisie!!!")
-            print(action)
+        #print('Youhou')
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                BIG_MAC = OUT
+            if event.type == KEYDOWN:
+                x2, y2 = a.mouvement(event.key, x, y)
+                if a.position(x2, y2) == WALL:
+                    print("C'est un mur!!! ")  # + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
+                if event.key == K_DOWN:
+                    position_mcg = position_mcg.move(0, 60)
+                    print("bas")
+                if event.key == K_LEFT:
+                    position_mcg = position_mcg.move(-60, 0)
+                if event.key == K_RIGHT:
+                    position_mcg = position_mcg.move(60, 0)
+                if event.key == K_UP:
+                    position_mcg = position_mcg.move(0, -60)
+                if event.key == K_SPACE:
+                    print("Espace")
+        pyg_laby()
+        laby_fenetre.blit(mcg, position_mcg)
+        pygame.display.flip()
+    pygame.quit()
 
+'''      
+                 ask to user which direction he wants to go
+                action = input("Quel direction?\n")
+                # si action egale à une des directions
+                if (action == TOP or action == DOWN or action == LEFT or action == RIGHT):
+                    # check the futur position is not a wall
+                    x2, y2 = a.mouvement(action, x, y)
+                    if a.position(x2,y2) == WALL:
+                        print("C'est un mur!!! ")# + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
+                    else:
+                        # on MAJ les coordonnées de la variable big_mac
+                        x = x2
+                        y = y2
+                        BIG_MAC = a.position(x, y)
+                        # fonction pour le controle des objets
+                        a.saisie_objet(BIG_MAC)
+                        # modification de la lettre actuelle en C (apres verif mur et objets)
+                        a.list_all[y2][x2] = 'C'
+                        print("*" + action + "*" + str(x) + " " + str(y) + " " + BIG_MAC)
+                        a.macgyver_visual(y2, x2)
+                        # position actuelle de mcgyver sur la case X
+                    # verification sortie avec objets
+                    if BIG_MAC == OUT and len(a.remaining_objects) != 0 :
+                        print(joueur + " tu n'avais pas tous les objets, RIP Mac Gyver!")
+                    elif BIG_MAC == OUT and len(a.remaining_objects) == 0:
+                        print("Bravo " + joueur + ", Mac Gyver a endormi le gardin, il est libre!!!")
+                else:
+                    print("Erreur de saisie!!!")
+                    print(action)
+         
+
+'''
