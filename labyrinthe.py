@@ -62,7 +62,7 @@ class Labyrinthe():
         self.x = 0
         self.y = 0
         self.list_all = self.lec_fichier(fichier_laby)
-        self.remining_objects = {ETHER, NEEDLE, TUBE}
+        self.remaining_objects = {ETHER, NEEDLE, TUBE}
         self.list_object = ['N', 'O', 'P']
         #self.list_position_mcgyver = self.position_mcgyver(x, y)
         self.dimension = 15
@@ -108,19 +108,19 @@ class Labyrinthe():
 
     def mouvement(self, touch, x, y):
         # to change x & y variables
-        if event.key == K_DOWN:
+        if touch == K_DOWN:
             # if down, y takes +1
             if 0 <= y <= 13:
                 y += 1
-        if touch == TOP:
+        if touch == K_UP:
             # if top, y takes -1
             if 1 <= y <= 14:
                 y -= 1
-        if touch == LEFT:
+        if touch == K_LEFT:
             # if left, x takes -1
             if 1 <= x <= 14:
                 x -= 1
-        if touch == RIGHT:
+        if touch == K_RIGHT:
             # if right, x takes +1
             if 0 <= x <= 13:
                 x += 1
@@ -133,7 +133,7 @@ class Labyrinthe():
             print("C'est un objet")
             self.remaining_objects.remove(e)
             #self.list_object(e)
-            print(self.remining_objects)
+            print(self.remaining_objects)
 
     def macgyver_visual(self, y2, x2):
         show_laby = deepcopy(a.list_all)
@@ -152,6 +152,28 @@ def annonce(nom):
     print("Les touches directions sont e : Haut, x : bas, d : droite et s :gauche")
     print("Pour quitter, appuyer sur la touche q")
 
+def pyg_laby():
+    laby_fenetre.blit(laby_background, (0, 0))
+    x_lab = 0
+    y_lab = 0
+    while x_lab <= 14:
+        while y_lab <= 14:
+            if a.liste_all[y_lab][x_lab] == 'M':
+                #print(str(x_lab) + " * " + str(y_lab))
+                laby_fenetre.blit(mur, (x_lab * 60, y_lab * 60))
+            if a.liste_all[y_lab][x_lab] == ETHER:
+                #print(str(x_lab) + " * " + str(y_lab))
+                laby_fenetre.blit(img_ether, (x_lab * 60, y_lab * 60))
+            if a.liste_all[y_lab][x_lab] == NEEDLE:
+                #print(str(x_lab) + " * " + str(y_lab))
+                laby_fenetre.blit(img_aiguille, (x_lab * 60, y_lab * 60))
+            if a.liste_all[y_lab][x_lab] == TUBE:
+                #print(str(x_lab) + " * " + str(y_lab))
+                laby_fenetre.blit(img_tube_plastique, (x_lab * 60, y_lab * 60))
+            y_lab += 1
+        y_lab = 0
+        x_lab += 1
+    x_lab = 0
 
 if __name__=='__main__':
 
@@ -185,34 +207,7 @@ if __name__=='__main__':
     # Creating of 'a' object
     a = Labyrinthe(LABY_FILE)
 
-
-
     a.pos_object(a.list_object)
-
-
-
-    def pyg_laby():
-        laby_fenetre.blit(laby_background, (0, 0))
-        x_lab = 0
-        y_lab = 0
-        while x_lab <= 14:
-            while y_lab <= 14:
-                if a.liste_all[y_lab][x_lab] == 'M':
-                    #print(str(x_lab) + " * " + str(y_lab))
-                    laby_fenetre.blit(mur, (x_lab * 60, y_lab * 60))
-                if a.liste_all[y_lab][x_lab] == ETHER:
-                    #print(str(x_lab) + " * " + str(y_lab))
-                    laby_fenetre.blit(img_ether, (x_lab * 60, y_lab * 60))
-                if a.liste_all[y_lab][x_lab] == NEEDLE:
-                    #print(str(x_lab) + " * " + str(y_lab))
-                    laby_fenetre.blit(img_aiguille, (x_lab * 60, y_lab * 60))
-                if a.liste_all[y_lab][x_lab] == TUBE:
-                    #print(str(x_lab) + " * " + str(y_lab))
-                    laby_fenetre.blit(img_tube_plastique, (x_lab * 60, y_lab * 60))
-                y_lab += 1
-            y_lab = 0
-            x_lab += 1
-        x_lab = 0
 
         #pygame.display.flip()
 
@@ -228,17 +223,33 @@ if __name__=='__main__':
                 x2, y2 = a.mouvement(event.key, x, y)
                 if a.position(x2, y2) == WALL:
                     print("C'est un mur!!! ")  # + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
-                if event.key == K_DOWN:
-                    position_mcg = position_mcg.move(0, 60)
-                    print("bas")
-                if event.key == K_LEFT:
-                    position_mcg = position_mcg.move(-60, 0)
-                if event.key == K_RIGHT:
-                    position_mcg = position_mcg.move(60, 0)
-                if event.key == K_UP:
-                    position_mcg = position_mcg.move(0, -60)
-                if event.key == K_SPACE:
-                    print("Espace")
+                else:
+                    # on MAJ les coordonnées de la variable big_mac
+                    x = x2
+                    y = y2
+                    BIG_MAC = a.position(x, y)
+                    if event.key == K_DOWN:
+                        position_mcg = position_mcg.move(0, 60)
+                        #print("bas")
+                    if event.key == K_LEFT:
+                        position_mcg = position_mcg.move(-60, 0)
+                    if event.key == K_RIGHT:
+                        position_mcg = position_mcg.move(60, 0)
+                    if event.key == K_UP:
+                        position_mcg = position_mcg.move(0, -60)
+                    # fonction pour le controle des objets
+                    a.saisie_objet(BIG_MAC)
+                    # modification de la lettre actuelle en C (apres verif mur et objets)
+                    a.list_all[y2][x2] = 'C'
+                    #print("*" + action + "*" + str(x) + " " + str(y) + " " + BIG_MAC)
+                    #a.macgyver_visual(y2, x2)
+                    # position actuelle de mcgyver sur la case X
+                    # verification sortie avec objets
+                if BIG_MAC == OUT and len(a.remaining_objects) != 0:
+                        print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
+                elif BIG_MAC == OUT and len(a.remaining_objects) == 0:
+                        print("Bravo , Mac Gyver a endormi le gardin, il est libre!!!")
+
         pyg_laby()
         laby_fenetre.blit(mcg, position_mcg)
         pygame.display.flip()
