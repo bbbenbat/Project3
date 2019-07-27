@@ -11,14 +11,6 @@ E for the wrong way
 S for the ending''
 '''
 
-
-#Tous les objets du labyrinthe doivent être dans la classe
-#position de mcgyver comme attribut de la classe
-#saisie_object devient une methode de Labyrinth
-#verification de saisie de tous les objects avec len de self.remining_object
-#maj position de mcgyver sans x et y, position dans la class
-
-
 import random
 import pygame
 from pygame.locals import *
@@ -29,8 +21,6 @@ pygame.init()
 # x y initialisation
 x = 0
 y = 0
-
-
 
 # player
 BIG_MAC = 0
@@ -44,7 +34,7 @@ DOWN = 'x'
 LEFT = 's'
 RIGHT = 'd'
 
-# variables objets
+# variables objects
 ETHER = 'N'
 NEEDLE = 'O'
 TUBE = 'P'
@@ -161,19 +151,23 @@ def pyg_laby():
             if a.liste_all[y_lab][x_lab] == 'M':
                 #print(str(x_lab) + " * " + str(y_lab))
                 laby_fenetre.blit(mur, (x_lab * 60, y_lab * 60))
-            if a.liste_all[y_lab][x_lab] == ETHER:
+            elif a.liste_all[y_lab][x_lab] == ETHER:
                 #print(str(x_lab) + " * " + str(y_lab))
                 laby_fenetre.blit(img_ether, (x_lab * 60, y_lab * 60))
-            if a.liste_all[y_lab][x_lab] == NEEDLE:
+            elif a.liste_all[y_lab][x_lab] == NEEDLE:
                 #print(str(x_lab) + " * " + str(y_lab))
                 laby_fenetre.blit(img_aiguille, (x_lab * 60, y_lab * 60))
-            if a.liste_all[y_lab][x_lab] == TUBE:
+            elif a.liste_all[y_lab][x_lab] == TUBE:
                 #print(str(x_lab) + " * " + str(y_lab))
                 laby_fenetre.blit(img_tube_plastique, (x_lab * 60, y_lab * 60))
+            elif a.liste_all[y_lab][x_lab] == 'S':
+                #print(str(x_lab) + " * " + str(y_lab))
+                laby_fenetre.blit(mechant, (x_lab * 60, y_lab * 60))
             y_lab += 1
         y_lab = 0
         x_lab += 1
     x_lab = 0
+
 
 if __name__=='__main__':
 
@@ -198,8 +192,16 @@ if __name__=='__main__':
     mcg = pygame.transform.scale(mcg, (60, 60))
     position_mcg = mcg.get_rect()
     laby_fenetre.blit(mcg, position_mcg)
-    #laby_fenetre.blit(mur, (0, 0))
-    # laby_fenetre.blit(mur, (60,60))
+
+    mechant = pygame.image.load("Gardien.png").convert()
+    mechant = pygame.transform.scale(mechant, (60, 60))
+
+    rip = pygame.image.load("Rip.jpg").convert()
+    rip = pygame.transform.scale(rip, (600, 600))
+
+    mg_win = pygame.image.load("mgwin.jpg").convert()
+    mg_win = pygame.transform.scale(mg_win, (600, 600))
+
     pygame.display.flip()
 
     # control that is a first play
@@ -215,7 +217,8 @@ if __name__=='__main__':
     #annonce(joueur)
 
     while BIG_MAC != OUT:
-        #print('Youhou')
+        rip_check = 0
+        win_check = 0
         for event in pygame.event.get():
             if event.type == QUIT:
                 BIG_MAC = OUT
@@ -225,65 +228,42 @@ if __name__=='__main__':
                     print("C'est un mur!!! ")  # + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
                 else:
                     # on MAJ les coordonnées de la variable big_mac
+                    print(x2)
+                    if event.key == K_DOWN and y < 14:
+                        position_mcg = position_mcg.move(0, 60)
+                    if event.key == K_LEFT and x > 0:
+                        position_mcg = position_mcg.move(-60, 0)
+                    if event.key == K_RIGHT and x < 14:
+                        position_mcg = position_mcg.move(60, 0)
+                    if event.key == K_UP and y > 0:
+                        position_mcg = position_mcg.move(0, -60)
                     x = x2
                     y = y2
                     BIG_MAC = a.position(x, y)
-                    if event.key == K_DOWN:
-                        position_mcg = position_mcg.move(0, 60)
-                        #print("bas")
-                    if event.key == K_LEFT:
-                        position_mcg = position_mcg.move(-60, 0)
-                    if event.key == K_RIGHT:
-                        position_mcg = position_mcg.move(60, 0)
-                    if event.key == K_UP:
-                        position_mcg = position_mcg.move(0, -60)
-                    # fonction pour le controle des objets
+                    #print(position_mcg)
+
+                        # fonction pour le controle des objets
                     a.saisie_objet(BIG_MAC)
-                    # modification de la lettre actuelle en C (apres verif mur et objets)
+                        # modification de la lettre actuelle en C (apres verif mur et objets)
                     a.list_all[y2][x2] = 'C'
-                    #print("*" + action + "*" + str(x) + " " + str(y) + " " + BIG_MAC)
-                    #a.macgyver_visual(y2, x2)
-                    # position actuelle de mcgyver sur la case X
-                    # verification sortie avec objets
+                        #print("*" + action + "*" + str(x) + " " + str(y) + " " + BIG_MAC)
+                        #a.macgyver_visual(y2, x2)
+                        # position actuelle de mcgyver sur la case X
+                        # verification sortie avec objets
                 if BIG_MAC == OUT and len(a.remaining_objects) != 0:
-                        print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
+                    #print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
+                    rip_check = 1
                 elif BIG_MAC == OUT and len(a.remaining_objects) == 0:
-                        print("Bravo , Mac Gyver a endormi le gardin, il est libre!!!")
+                    #print("Bravo , Mac Gyver a endormi le gardin, il est libre!!!")
+                    win_check = 1
 
         pyg_laby()
         laby_fenetre.blit(mcg, position_mcg)
+        if rip_check == 1:
+            laby_fenetre.blit(rip, (150,150))
+        elif win_check == 1:
+            laby_fenetre.blit(mg_win, (150, 150))
         pygame.display.flip()
+    pygame.time.wait(5000)
     pygame.quit()
 
-'''      
-                 ask to user which direction he wants to go
-                action = input("Quel direction?\n")
-                # si action egale à une des directions
-                if (action == TOP or action == DOWN or action == LEFT or action == RIGHT):
-                    # check the futur position is not a wall
-                    x2, y2 = a.mouvement(action, x, y)
-                    if a.position(x2,y2) == WALL:
-                        print("C'est un mur!!! ")# + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
-                    else:
-                        # on MAJ les coordonnées de la variable big_mac
-                        x = x2
-                        y = y2
-                        BIG_MAC = a.position(x, y)
-                        # fonction pour le controle des objets
-                        a.saisie_objet(BIG_MAC)
-                        # modification de la lettre actuelle en C (apres verif mur et objets)
-                        a.list_all[y2][x2] = 'C'
-                        print("*" + action + "*" + str(x) + " " + str(y) + " " + BIG_MAC)
-                        a.macgyver_visual(y2, x2)
-                        # position actuelle de mcgyver sur la case X
-                    # verification sortie avec objets
-                    if BIG_MAC == OUT and len(a.remaining_objects) != 0 :
-                        print(joueur + " tu n'avais pas tous les objets, RIP Mac Gyver!")
-                    elif BIG_MAC == OUT and len(a.remaining_objects) == 0:
-                        print("Bravo " + joueur + ", Mac Gyver a endormi le gardin, il est libre!!!")
-                else:
-                    print("Erreur de saisie!!!")
-                    print(action)
-         
-
-'''
