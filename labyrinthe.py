@@ -11,8 +11,9 @@ E for the wrong way
 S for the ending''
 '''
 
+import os
 import random
-import pygame
+import pygame.display
 from pygame.locals import *
 pygame.init()
 
@@ -25,8 +26,13 @@ y = 0
 # player
 BIG_MAC = 0
 
+# screen size
+screen = 600
+case_number = 15
+case_size = int(screen / case_number)
+
 # Labyrinth file's path
-LABY_FILE = "labyrinth.txt"
+LABY_FILE = ("labyrinth.txt")
 
 # Directional keys
 TOP = 'e'
@@ -150,64 +156,71 @@ def pyg_laby():
         while y_lab <= 14:
             if a.liste_all[y_lab][x_lab] == 'M':
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(mur, (x_lab * 60, y_lab * 60))
+                laby_fenetre.blit(mur, (x_lab * case_size, y_lab * case_size))
             elif a.liste_all[y_lab][x_lab] == ETHER:
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(img_ether, (x_lab * 60, y_lab * 60))
+                laby_fenetre.blit(img_ether, (x_lab * case_size, y_lab * case_size))
             elif a.liste_all[y_lab][x_lab] == NEEDLE:
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(img_aiguille, (x_lab * 60, y_lab * 60))
+                laby_fenetre.blit(img_aiguille, (x_lab * case_size, y_lab * case_size))
             elif a.liste_all[y_lab][x_lab] == TUBE:
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(img_tube_plastique, (x_lab * 60, y_lab * 60))
+                laby_fenetre.blit(img_tube_plastique, (x_lab * case_size, y_lab * case_size))
             elif a.liste_all[y_lab][x_lab] == 'S':
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(mechant, (x_lab * 60, y_lab * 60))
+                laby_fenetre.blit(mechant, (x_lab * case_size, y_lab * case_size))
             y_lab += 1
         y_lab = 0
         x_lab += 1
     x_lab = 0
 
+def get_true_filename(filename):
+    try:
+        # Hack for pyInstaller. Refer https://stackoverflow.com/a/13790741
+        base = sys._MEIPASS
+    except Exception:
+        base = os.path.abspath(".")
+    return os.path.join(base, filename)
 
 if __name__=='__main__':
-
+    print(case_size)
     # pygame variable
-    laby_fenetre = pygame.display.set_mode((900, 900))
-    laby_background = pygame.image.load("background_test.jpg").convert()
-    laby_background = pygame.transform.scale(laby_background, (900, 900))
+    laby_fenetre = pygame.display.set_mode((screen, screen))
+    laby_background = pygame.image.load(get_true_filename("background_test.jpg")).convert()
+    laby_background = pygame.transform.scale(laby_background, (screen, screen))
     laby_fenetre.blit(laby_background, (0, 0))
-    mur = pygame.image.load("mur.jpeg").convert()
-    mur = pygame.transform.scale(mur, (60, 60))
+    mur = pygame.image.load(get_true_filename("mur.jpeg")).convert()
+    mur = pygame.transform.scale(mur, (case_size, case_size))
 
-    img_ether = pygame.image.load("ether.png").convert()
-    img_ether = pygame.transform.scale(img_ether, (60, 60))
+    img_ether = pygame.image.load(get_true_filename("ether.png")).convert()
+    img_ether = pygame.transform.scale(img_ether, (case_size, case_size))
 
-    img_aiguille = pygame.image.load("aiguille.png").convert()
-    img_aiguille = pygame.transform.scale(img_aiguille, (60, 60))
+    img_aiguille = pygame.image.load(get_true_filename("aiguille.png")).convert()
+    img_aiguille = pygame.transform.scale(img_aiguille, (case_size, case_size))
 
-    img_tube_plastique = pygame.image.load("tube_plastique.png").convert()
-    img_tube_plastique = pygame.transform.scale(img_tube_plastique, (60, 60))
+    img_tube_plastique = pygame.image.load(get_true_filename("tube_plastique.png")).convert()
+    img_tube_plastique = pygame.transform.scale(img_tube_plastique, (case_size, case_size))
 
-    mcg = pygame.image.load("MacGyver.png").convert()
-    mcg = pygame.transform.scale(mcg, (60, 60))
+    mcg = pygame.image.load(get_true_filename("MacGyver.png")).convert()
+    mcg = pygame.transform.scale(mcg, (case_size, case_size))
     position_mcg = mcg.get_rect()
     laby_fenetre.blit(mcg, position_mcg)
 
-    mechant = pygame.image.load("Gardien.png").convert()
-    mechant = pygame.transform.scale(mechant, (60, 60))
+    mechant = pygame.image.load(get_true_filename("Gardien.png")).convert()
+    mechant = pygame.transform.scale(mechant, (case_size, case_size))
 
-    rip = pygame.image.load("Rip.jpg").convert()
-    rip = pygame.transform.scale(rip, (600, 600))
+    rip = pygame.image.load(get_true_filename("Rip.jpg")).convert()
+    rip = pygame.transform.scale(rip, (screen, screen))
 
-    mg_win = pygame.image.load("mgwin.jpg").convert()
-    mg_win = pygame.transform.scale(mg_win, (600, 600))
+    mg_win = pygame.image.load(get_true_filename("mgwin.jpg")).convert()
+    mg_win = pygame.transform.scale(mg_win, (screen, screen))
 
     pygame.display.flip()
 
     # control that is a first play
 
     # Creating of 'a' object
-    a = Labyrinthe(LABY_FILE)
+    a = Labyrinthe(get_true_filename("labyrinth.txt"))
 
     a.pos_object(a.list_object)
 
@@ -230,13 +243,13 @@ if __name__=='__main__':
                     # on MAJ les coordonnées de la variable big_mac
                     print(x2)
                     if event.key == K_DOWN and y < 14:
-                        position_mcg = position_mcg.move(0, 60)
+                        position_mcg = position_mcg.move(0, case_size)
                     if event.key == K_LEFT and x > 0:
-                        position_mcg = position_mcg.move(-60, 0)
+                        position_mcg = position_mcg.move(-case_size, 0)
                     if event.key == K_RIGHT and x < 14:
-                        position_mcg = position_mcg.move(60, 0)
+                        position_mcg = position_mcg.move(case_size, 0)
                     if event.key == K_UP and y > 0:
-                        position_mcg = position_mcg.move(0, -60)
+                        position_mcg = position_mcg.move(0, -case_size)
                     x = x2
                     y = y2
                     BIG_MAC = a.position(x, y)
@@ -260,9 +273,9 @@ if __name__=='__main__':
         pyg_laby()
         laby_fenetre.blit(mcg, position_mcg)
         if rip_check == 1:
-            laby_fenetre.blit(rip, (150,150))
+            laby_fenetre.blit(rip, (0,0))
         elif win_check == 1:
-            laby_fenetre.blit(mg_win, (150, 150))
+            laby_fenetre.blit(mg_win, (0, 0))
         pygame.display.flip()
     pygame.time.wait(5000)
     pygame.quit()
