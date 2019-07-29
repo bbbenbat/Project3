@@ -27,9 +27,9 @@ y = 0
 BIG_MAC = 0
 
 # screen size
-screen = 600
-case_number = 15
-case_size = int(screen / case_number)
+SCREEN = 300
+CASE_NUMBER = 15
+CASE_SIZE = int(SCREEN / CASE_NUMBER)
 
 # Labyrinth file's path
 LABY_FILE = ("labyrinth.txt")
@@ -88,7 +88,6 @@ class Labyrinthe():
 
     def __str__(self):
         for line in self.list_all:
-
             print(line)
 
     def pos_object(self, x):
@@ -126,10 +125,10 @@ class Labyrinthe():
         """ check objects took """
         if (e == ETHER or e == NEEDLE or e == TUBE):
             """ player comes to a case, if the case = 1 of 3 objects """
-            print("C'est un objet")
+            #print("C'est un objet")
             self.remaining_objects.remove(e)
             #self.list_object(e)
-            print(self.remaining_objects)
+            #print(self.remaining_objects)
 
     def macgyver_visual(self, y2, x2):
         show_laby = deepcopy(a.list_all)
@@ -156,19 +155,19 @@ def pyg_laby():
         while y_lab <= 14:
             if a.liste_all[y_lab][x_lab] == 'M':
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(mur, (x_lab * case_size, y_lab * case_size))
+                laby_fenetre.blit(mur, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             elif a.liste_all[y_lab][x_lab] == ETHER:
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(img_ether, (x_lab * case_size, y_lab * case_size))
+                laby_fenetre.blit(img_ether, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             elif a.liste_all[y_lab][x_lab] == NEEDLE:
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(img_aiguille, (x_lab * case_size, y_lab * case_size))
+                laby_fenetre.blit(img_aiguille, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             elif a.liste_all[y_lab][x_lab] == TUBE:
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(img_tube_plastique, (x_lab * case_size, y_lab * case_size))
+                laby_fenetre.blit(img_tube_plastique, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             elif a.liste_all[y_lab][x_lab] == 'S':
                 #print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(mechant, (x_lab * case_size, y_lab * case_size))
+                laby_fenetre.blit(mechant, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             y_lab += 1
         y_lab = 0
         x_lab += 1
@@ -183,37 +182,37 @@ def get_true_filename(filename):
     return os.path.join(base, filename)
 
 if __name__=='__main__':
-    print(case_size)
+    #print(CASE_SIZE)
     # pygame variable
-    laby_fenetre = pygame.display.set_mode((screen, screen))
+    laby_fenetre = pygame.display.set_mode((SCREEN, SCREEN))
     laby_background = pygame.image.load(get_true_filename("background_test.jpg")).convert()
-    laby_background = pygame.transform.scale(laby_background, (screen, screen))
+    laby_background = pygame.transform.scale(laby_background, (SCREEN, SCREEN))
     laby_fenetre.blit(laby_background, (0, 0))
     mur = pygame.image.load(get_true_filename("mur.jpeg")).convert()
-    mur = pygame.transform.scale(mur, (case_size, case_size))
+    mur = pygame.transform.scale(mur, (CASE_SIZE, CASE_SIZE))
 
     img_ether = pygame.image.load(get_true_filename("ether.png")).convert()
-    img_ether = pygame.transform.scale(img_ether, (case_size, case_size))
+    img_ether = pygame.transform.scale(img_ether, (CASE_SIZE, CASE_SIZE))
 
     img_aiguille = pygame.image.load(get_true_filename("aiguille.png")).convert()
-    img_aiguille = pygame.transform.scale(img_aiguille, (case_size, case_size))
+    img_aiguille = pygame.transform.scale(img_aiguille, (CASE_SIZE, CASE_SIZE))
 
     img_tube_plastique = pygame.image.load(get_true_filename("tube_plastique.png")).convert()
-    img_tube_plastique = pygame.transform.scale(img_tube_plastique, (case_size, case_size))
+    img_tube_plastique = pygame.transform.scale(img_tube_plastique, (CASE_SIZE, CASE_SIZE))
 
     mcg = pygame.image.load(get_true_filename("MacGyver.png")).convert()
-    mcg = pygame.transform.scale(mcg, (case_size, case_size))
+    mcg = pygame.transform.scale(mcg, (CASE_SIZE, CASE_SIZE))
     position_mcg = mcg.get_rect()
     laby_fenetre.blit(mcg, position_mcg)
 
     mechant = pygame.image.load(get_true_filename("Gardien.png")).convert()
-    mechant = pygame.transform.scale(mechant, (case_size, case_size))
+    mechant = pygame.transform.scale(mechant, (CASE_SIZE, CASE_SIZE))
 
     rip = pygame.image.load(get_true_filename("Rip.jpg")).convert()
-    rip = pygame.transform.scale(rip, (screen, screen))
+    rip = pygame.transform.scale(rip, (SCREEN, SCREEN))
 
     mg_win = pygame.image.load(get_true_filename("mgwin.jpg")).convert()
-    mg_win = pygame.transform.scale(mg_win, (screen, screen))
+    mg_win = pygame.transform.scale(mg_win, (SCREEN, SCREEN))
 
     pygame.display.flip()
 
@@ -229,6 +228,8 @@ if __name__=='__main__':
     #joueur = input("Quel est votre nom de joueur?\n")
     #annonce(joueur)
 
+    pygame.key.set_repeat(400, 30)
+
     while BIG_MAC != OUT:
         rip_check = 0
         win_check = 0
@@ -238,18 +239,19 @@ if __name__=='__main__':
             if event.type == KEYDOWN:
                 x2, y2 = a.mouvement(event.key, x, y)
                 if a.position(x2, y2) == WALL:
-                    print("C'est un mur!!! ")  # + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
+                    x2 = x2
+                    #print("C'est un mur!!! ")  # + "*" +action + "*" +str(x) + " " + str(y) + " " + str(big_mac))
                 else:
                     # on MAJ les coordonnées de la variable big_mac
-                    print(x2)
+                    #print(x2)
                     if event.key == K_DOWN and y < 14:
-                        position_mcg = position_mcg.move(0, case_size)
+                        position_mcg = position_mcg.move(0, CASE_SIZE)
                     if event.key == K_LEFT and x > 0:
-                        position_mcg = position_mcg.move(-case_size, 0)
+                        position_mcg = position_mcg.move(-CASE_SIZE, 0)
                     if event.key == K_RIGHT and x < 14:
-                        position_mcg = position_mcg.move(case_size, 0)
+                        position_mcg = position_mcg.move(CASE_SIZE, 0)
                     if event.key == K_UP and y > 0:
-                        position_mcg = position_mcg.move(0, -case_size)
+                        position_mcg = position_mcg.move(0, -CASE_SIZE)
                     x = x2
                     y = y2
                     BIG_MAC = a.position(x, y)
