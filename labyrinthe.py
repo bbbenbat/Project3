@@ -128,7 +128,7 @@ class Labyrinthe():
             #print("C'est un objet")
             self.remaining_objects.remove(e)
             #self.list_object(e)
-            #print(self.remaining_objects)
+            print(self.remaining_objects)
 
     def macgyver_visual(self, y2, x2):
         show_laby = deepcopy(a.list_all)
@@ -149,6 +149,7 @@ def annonce(nom):
 
 def pyg_laby():
     laby_fenetre.blit(laby_background, (0, 0))
+    laby_mini_background.blit(laby_mini_background, (0, SCREEN))
     x_lab = 0
     y_lab = 0
     while x_lab <= 14:
@@ -173,6 +174,16 @@ def pyg_laby():
         x_lab += 1
     x_lab = 0
 
+def compt_obj(comp):
+    for azer in comp:
+        if azer == NEEDLE:
+            print("Yes")
+            laby_fenetre.blit(img_mini_tube_plastique, (CASE_SIZE, SCREEN))
+
+
+        #f i =! TUBE:
+         #   laby_fenetre.blit(img_mini_tube_plastique, (CASE_SIZE * 2, SCREEN))
+
 def get_true_filename(filename):
     try:
         # Hack for pyInstaller. Refer https://stackoverflow.com/a/13790741
@@ -184,21 +195,38 @@ def get_true_filename(filename):
 if __name__=='__main__':
     #print(CASE_SIZE)
     # pygame variable
-    laby_fenetre = pygame.display.set_mode((SCREEN, SCREEN))
+    laby_fenetre = pygame.display.set_mode((SCREEN, SCREEN + CASE_SIZE))
     laby_background = pygame.image.load(get_true_filename("background_test.jpg")).convert()
     laby_background = pygame.transform.scale(laby_background, (SCREEN, SCREEN))
     laby_fenetre.blit(laby_background, (0, 0))
+
+    laby_mini_background = pygame.image.load(get_true_filename("mur.jpeg")).convert()
+    laby_mini_background = pygame.transform.scale(laby_mini_background, (SCREEN, CASE_SIZE))
+    laby_fenetre.blit(laby_mini_background, (0, SCREEN))
+
     mur = pygame.image.load(get_true_filename("mur.jpeg")).convert()
     mur = pygame.transform.scale(mur, (CASE_SIZE, CASE_SIZE))
 
     img_ether = pygame.image.load(get_true_filename("ether.png")).convert()
     img_ether = pygame.transform.scale(img_ether, (CASE_SIZE, CASE_SIZE))
 
+    img_mini_ether = pygame.image.load(get_true_filename("ether.png")).convert()
+    img_mini_ether = pygame.transform.scale(img_mini_ether, (CASE_SIZE, CASE_SIZE))
+
     img_aiguille = pygame.image.load(get_true_filename("aiguille.png")).convert()
     img_aiguille = pygame.transform.scale(img_aiguille, (CASE_SIZE, CASE_SIZE))
 
+    img_mini_aiguille = pygame.image.load(get_true_filename("aiguille.png")).convert()
+    img_mini_aiguille = pygame.transform.scale(img_mini_aiguille, (CASE_SIZE, CASE_SIZE))
+
     img_tube_plastique = pygame.image.load(get_true_filename("tube_plastique.png")).convert()
     img_tube_plastique = pygame.transform.scale(img_tube_plastique, (CASE_SIZE, CASE_SIZE))
+
+    img_mini_tube_plastique = pygame.image.load(get_true_filename("tube_plastique.png")).convert()
+    img_mini_tube_plastique = pygame.transform.scale(img_mini_tube_plastique, (CASE_SIZE, CASE_SIZE))
+
+    img_seringue = pygame.image.load(get_true_filename("seringue.png")).convert()
+    img_seringue = pygame.transform.scale(img_seringue, (CASE_SIZE, CASE_SIZE))
 
     mcg = pygame.image.load(get_true_filename("MacGyver.png")).convert()
     mcg = pygame.transform.scale(mcg, (CASE_SIZE, CASE_SIZE))
@@ -209,10 +237,10 @@ if __name__=='__main__':
     mechant = pygame.transform.scale(mechant, (CASE_SIZE, CASE_SIZE))
 
     rip = pygame.image.load(get_true_filename("Rip.jpg")).convert()
-    rip = pygame.transform.scale(rip, (SCREEN, SCREEN))
+    rip = pygame.transform.scale(rip, (SCREEN, SCREEN + CASE_SIZE))
 
     mg_win = pygame.image.load(get_true_filename("mgwin.jpg")).convert()
-    mg_win = pygame.transform.scale(mg_win, (SCREEN, SCREEN))
+    mg_win = pygame.transform.scale(mg_win, (SCREEN, SCREEN + CASE_SIZE))
 
     pygame.display.flip()
 
@@ -237,6 +265,7 @@ if __name__=='__main__':
             if event.type == QUIT:
                 BIG_MAC = OUT
             if event.type == KEYDOWN:
+
                 x2, y2 = a.mouvement(event.key, x, y)
                 if a.position(x2, y2) == WALL:
                     x2 = x2
@@ -261,19 +290,26 @@ if __name__=='__main__':
                     a.saisie_objet(BIG_MAC)
                         # modification de la lettre actuelle en C (apres verif mur et objets)
                     a.list_all[y2][x2] = 'C'
-                        #print("*" + action + "*" + str(x) + " " + str(y) + " " + BIG_MAC)
-                        #a.macgyver_visual(y2, x2)
-                        # position actuelle de mcgyver sur la case X
-                        # verification sortie avec objets
+                    compt_obj(a.remaining_objects)
+                    #compt_obj()
+
                 if BIG_MAC == OUT and len(a.remaining_objects) != 0:
                     #print("Tu n'avais pas tous les objets, RIP Mac Gyver!")
                     rip_check = 1
                 elif BIG_MAC == OUT and len(a.remaining_objects) == 0:
                     #print("Bravo , Mac Gyver a endormi le gardin, il est libre!!!")
                     win_check = 1
-
-        pyg_laby()
-        laby_fenetre.blit(mcg, position_mcg)
+            pyg_laby()
+            laby_fenetre.blit(laby_mini_background, (0, SCREEN))
+            laby_fenetre.blit(mcg, position_mcg)
+            if NEEDLE in a.remaining_objects:
+                laby_fenetre.blit(img_mini_aiguille, (CASE_SIZE, SCREEN))
+            if ETHER in a.remaining_objects:
+                laby_fenetre.blit(img_mini_ether, (CASE_SIZE*2, SCREEN))
+            if TUBE in a.remaining_objects:
+                laby_fenetre.blit(img_mini_tube_plastique, (CASE_SIZE*3, SCREEN))
+            if len(a.remaining_objects) == 0:
+                laby_fenetre.blit(img_seringue, (CASE_SIZE*4, SCREEN))
         if rip_check == 1:
             laby_fenetre.blit(rip, (0,0))
         elif win_check == 1:
