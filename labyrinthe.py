@@ -119,53 +119,51 @@ class Labyrinthe:
             self.remaining_objects.remove(e)
             print(self.remaining_objects)
 
+    def pyg_laby(self):
+        """ to create visual labyrinth structure"""
+        laby_fenetre.blit(laby_background, (0, 0))
+        laby_mini_background.blit(laby_mini_background, (0, SCREEN))
+        x_lab = 0
+        y_lab = 0
+        while x_lab <= 14:
+            while y_lab <= 14:
+                # to create a wall
+                if a.liste_all[y_lab][x_lab] == "M":
+                    laby_fenetre.blit(mur, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
+                # to create an ether
+                elif a.liste_all[y_lab][x_lab] == ETHER:
+                    laby_fenetre.blit(img_ether, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
+                # to create an needle
+                elif a.liste_all[y_lab][x_lab] == NEEDLE:
+                    laby_fenetre.blit(img_aiguille, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
+                # to create a tube
+                elif a.liste_all[y_lab][x_lab] == TUBE:
+                    laby_fenetre.blit(
+                        img_tube_plastique, (x_lab * CASE_SIZE, y_lab * CASE_SIZE)
+                    )
+                # to create the gardian
+                elif a.liste_all[y_lab][x_lab] == "S":
+                    # print(str(x_lab) + " * " + str(y_lab))
+                    laby_fenetre.blit(mechant, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
+                y_lab += 1
+            # y must be reset for the next x
+            y_lab = 0
+            x_lab += 1
+        x_lab = 0
+
+    def compt_obj(self):
+        """ to print object if always in the labyrinth """
+        if NEEDLE in a.remaining_objects:
+            laby_fenetre.blit(img_mini_aiguille, (CASE_SIZE, SCREEN))
+        if ETHER in a.remaining_objects:
+            laby_fenetre.blit(img_mini_ether, (CASE_SIZE * 2, SCREEN))
+        if TUBE in a.remaining_objects:
+            laby_fenetre.blit(img_mini_tube_plastique, (CASE_SIZE * 3, SCREEN))
+        if len(a.remaining_objects) == 0:
+            laby_fenetre.blit(img_seringue, (CASE_SIZE * 4, SCREEN))
+
 
 #### FONCTIONS ####
-
-
-def pyg_laby():
-    """ to create visual labyrinth structure"""
-    laby_fenetre.blit(laby_background, (0, 0))
-    laby_mini_background.blit(laby_mini_background, (0, SCREEN))
-    x_lab = 0
-    y_lab = 0
-    while x_lab <= 14:
-        while y_lab <= 14:
-            # to create a wall
-            if a.liste_all[y_lab][x_lab] == "M":
-                laby_fenetre.blit(mur, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
-            # to create an ether
-            elif a.liste_all[y_lab][x_lab] == ETHER:
-                laby_fenetre.blit(img_ether, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
-            # to create an needle
-            elif a.liste_all[y_lab][x_lab] == NEEDLE:
-                laby_fenetre.blit(img_aiguille, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
-            # to create a tube
-            elif a.liste_all[y_lab][x_lab] == TUBE:
-                laby_fenetre.blit(
-                    img_tube_plastique, (x_lab * CASE_SIZE, y_lab * CASE_SIZE)
-                )
-            # to create the gardian
-            elif a.liste_all[y_lab][x_lab] == "S":
-                # print(str(x_lab) + " * " + str(y_lab))
-                laby_fenetre.blit(mechant, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
-            y_lab += 1
-        # y must be reset for the next x
-        y_lab = 0
-        x_lab += 1
-    x_lab = 0
-
-
-def compt_obj():
-    """ to print object if always in the labyrinth """
-    if NEEDLE in a.remaining_objects:
-        laby_fenetre.blit(img_mini_aiguille, (CASE_SIZE, SCREEN))
-    if ETHER in a.remaining_objects:
-        laby_fenetre.blit(img_mini_ether, (CASE_SIZE * 2, SCREEN))
-    if TUBE in a.remaining_objects:
-        laby_fenetre.blit(img_mini_tube_plastique, (CASE_SIZE * 3, SCREEN))
-    if len(a.remaining_objects) == 0:
-        laby_fenetre.blit(img_seringue, (CASE_SIZE * 4, SCREEN))
 
 
 def get_true_filename(filename):
@@ -291,13 +289,13 @@ if __name__ == "__main__":
                 elif BIG_MAC == OUT and len(a.remaining_objects) == 0:
                     win_check = 2
             # to print the labyrinth
-            pyg_laby()
+            a.pyg_laby()
             # to print the bottom window
             laby_fenetre.blit(laby_mini_background, (0, SCREEN))
             # to print the new player's position
             laby_fenetre.blit(mcg, position_mcg)
             # to print the objects always in the Labyrinth
-            compt_obj()
+            a.compt_obj()
         if win_check == 1:
             laby_fenetre.blit(rip, (0, 0))
         elif win_check == 2:
