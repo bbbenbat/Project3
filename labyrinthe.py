@@ -1,5 +1,4 @@
-
-''' Creating a labyrinth game.
+""" Creating a labyrinth game.
 MacGyver must go out with 3 objects.
 
 Rules about labyrinthe.txt file
@@ -9,12 +8,13 @@ M for the wall
 C for the way
 E for the wrong way
 S for the ending''
-'''
+"""
 
 import os
 import random
 import pygame.display
 from pygame.locals import *
+
 pygame.init()
 
 #### VARIABLES ####
@@ -31,29 +31,23 @@ CASE_NUMBER = 15
 CASE_SIZE = int(SCREEN / CASE_NUMBER)
 
 # Labyrinth file's path
-LABY_FILE = ("labyrinth.txt")
-
-# Directional keys
-TOP = 'e'
-DOWN = 'x'
-LEFT = 's'
-RIGHT = 'd'
+LABY_FILE = "labyrinth.txt"
 
 # variables objects
-ETHER = 'N'
-NEEDLE = 'O'
-TUBE = 'P'
+ETHER = "N"
+NEEDLE = "O"
+TUBE = "P"
 
 # beginning, ending, wall regarding letters of file
-START = 'D'
-OUT = 'S'
-WALL = 'M'
+START = "D"
+OUT = "S"
+WALL = "M"
 
 
 #### CLASS ####
 
 # The Labyrinth class will contain all the information to create the structure of the labyrinth
-class Labyrinthe():
+class Labyrinthe:
     def __init__(self, fichier_laby):
         # x and y will contain the coordinates of the letters
         self.x = 0
@@ -63,7 +57,7 @@ class Labyrinthe():
         # remaining_objects will permit to check items always in the labyrinth
         self.remaining_objects = {ETHER, NEEDLE, TUBE}
         # list to if case is an object
-        self.list_object = ['N', 'O', 'P']
+        self.list_object = ["N", "O", "P"]
         self.dimension = 15
 
     def lec_fichier(self, a):
@@ -76,8 +70,7 @@ class Labyrinthe():
             for line in reading:
                 liste_letter = [i for i in line]
                 self.liste_all += [liste_letter]
-            return(self.liste_all)
-
+            return self.liste_all
 
     def position(self, a, b):
         """ to find a position in labyrinth regading x & y """
@@ -95,7 +88,7 @@ class Labyrinthe():
             axe2 = random.randint(0, 14)
             # select with random 1 position
             prev = self.position(axe1, axe2)
-            if prev == 'C':
+            if prev == "C":
                 # if C, we change the letter of this position in list_all by one of 3 letter
                 self.list_all[axe2][axe1] = x.pop()
 
@@ -121,12 +114,14 @@ class Labyrinthe():
 
     def saisie_objet(self, e):
         """ check objects took """
-        if (e == ETHER or e == NEEDLE or e == TUBE):
+        if e == ETHER or e == NEEDLE or e == TUBE:
             """ player comes to a case, if the case = 1 of 3 objects """
             self.remaining_objects.remove(e)
             print(self.remaining_objects)
 
+
 #### FONCTIONS ####
+
 
 def pyg_laby():
     """ to create visual labyrinth structure"""
@@ -137,7 +132,7 @@ def pyg_laby():
     while x_lab <= 14:
         while y_lab <= 14:
             # to create a wall
-            if a.liste_all[y_lab][x_lab] == 'M':
+            if a.liste_all[y_lab][x_lab] == "M":
                 laby_fenetre.blit(mur, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             # to create an ether
             elif a.liste_all[y_lab][x_lab] == ETHER:
@@ -147,16 +142,19 @@ def pyg_laby():
                 laby_fenetre.blit(img_aiguille, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             # to create a tube
             elif a.liste_all[y_lab][x_lab] == TUBE:
-                laby_fenetre.blit(img_tube_plastique, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
+                laby_fenetre.blit(
+                    img_tube_plastique, (x_lab * CASE_SIZE, y_lab * CASE_SIZE)
+                )
             # to create the gardian
-            elif a.liste_all[y_lab][x_lab] == 'S':
-                #print(str(x_lab) + " * " + str(y_lab))
+            elif a.liste_all[y_lab][x_lab] == "S":
+                # print(str(x_lab) + " * " + str(y_lab))
                 laby_fenetre.blit(mechant, (x_lab * CASE_SIZE, y_lab * CASE_SIZE))
             y_lab += 1
         # y must be reset for the next x
         y_lab = 0
         x_lab += 1
     x_lab = 0
+
 
 def compt_obj():
     """ to print object if always in the labyrinth """
@@ -169,6 +167,7 @@ def compt_obj():
     if len(a.remaining_objects) == 0:
         laby_fenetre.blit(img_seringue, (CASE_SIZE * 4, SCREEN))
 
+
 def get_true_filename(filename):
     """ function to permit to start the program in windows, linux or mac OS """
     try:
@@ -179,16 +178,20 @@ def get_true_filename(filename):
     return os.path.join(base, filename)
 
 
-if __name__=='__main__':
+if __name__ == "__main__":
 
     # pygame variable to print at the beginning
     laby_fenetre = pygame.display.set_mode((SCREEN, SCREEN + CASE_SIZE))
-    laby_background = pygame.image.load(get_true_filename("background_test.jpg")).convert()
+    laby_background = pygame.image.load(
+        get_true_filename("background_test.jpg")
+    ).convert()
     laby_background = pygame.transform.scale(laby_background, (SCREEN, SCREEN))
     laby_fenetre.blit(laby_background, (0, 0))
 
     laby_mini_background = pygame.image.load(get_true_filename("mur.jpeg")).convert()
-    laby_mini_background = pygame.transform.scale(laby_mini_background, (SCREEN, CASE_SIZE))
+    laby_mini_background = pygame.transform.scale(
+        laby_mini_background, (SCREEN, CASE_SIZE)
+    )
     laby_fenetre.blit(laby_mini_background, (0, SCREEN))
 
     mur = pygame.image.load(get_true_filename("mur.jpeg")).convert()
@@ -204,13 +207,23 @@ if __name__=='__main__':
     img_aiguille = pygame.transform.scale(img_aiguille, (CASE_SIZE, CASE_SIZE))
 
     img_mini_aiguille = pygame.image.load(get_true_filename("aiguille.png")).convert()
-    img_mini_aiguille = pygame.transform.scale(img_mini_aiguille, (CASE_SIZE, CASE_SIZE))
+    img_mini_aiguille = pygame.transform.scale(
+        img_mini_aiguille, (CASE_SIZE, CASE_SIZE)
+    )
 
-    img_tube_plastique = pygame.image.load(get_true_filename("tube_plastique.png")).convert()
-    img_tube_plastique = pygame.transform.scale(img_tube_plastique, (CASE_SIZE, CASE_SIZE))
+    img_tube_plastique = pygame.image.load(
+        get_true_filename("tube_plastique.png")
+    ).convert()
+    img_tube_plastique = pygame.transform.scale(
+        img_tube_plastique, (CASE_SIZE, CASE_SIZE)
+    )
 
-    img_mini_tube_plastique = pygame.image.load(get_true_filename("tube_plastique.png")).convert()
-    img_mini_tube_plastique = pygame.transform.scale(img_mini_tube_plastique, (CASE_SIZE, CASE_SIZE))
+    img_mini_tube_plastique = pygame.image.load(
+        get_true_filename("tube_plastique.png")
+    ).convert()
+    img_mini_tube_plastique = pygame.transform.scale(
+        img_mini_tube_plastique, (CASE_SIZE, CASE_SIZE)
+    )
 
     img_seringue = pygame.image.load(get_true_filename("seringue.png")).convert()
     img_seringue = pygame.transform.scale(img_seringue, (CASE_SIZE, CASE_SIZE))
@@ -270,7 +283,7 @@ if __name__=='__main__':
                     # to check if the player position is on an object
                     a.saisie_objet(BIG_MAC)
                     # to change the visual of the position for the next loop (it will be a way)
-                    a.list_all[y2][x2] = 'C'
+                    a.list_all[y2][x2] = "C"
                 # if the player didn't take all objects
                 if BIG_MAC == OUT and len(a.remaining_objects) != 0:
                     win_check = 1
@@ -286,10 +299,9 @@ if __name__=='__main__':
             # to print the objects always in the Labyrinth
             compt_obj()
         if win_check == 1:
-            laby_fenetre.blit(rip, (0,0))
+            laby_fenetre.blit(rip, (0, 0))
         elif win_check == 2:
             laby_fenetre.blit(mg_win, (0, 0))
         pygame.display.flip()
     pygame.time.wait(3000)
     pygame.quit()
-
